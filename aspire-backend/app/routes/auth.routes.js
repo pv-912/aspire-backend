@@ -2,22 +2,32 @@ const { verifySignUp } = require("../middleware");
 const controller = require("../controllers/auth.controller");
 
 module.exports = function(app) {
-  app.use(function(req, res, next) {
-    res.header(
-      "Access-Control-Allow-Headers",
-      "x-access-token, Origin, Content-Type, Accept"
+  
+    // signup API
+    /* payload:
+    {
+        "name": "",
+        "email":"",
+        "contact":"",
+        "address":"",
+        "password": ""
+    }
+    */
+    app.post(
+        "/api/auth/signup",
+        [
+        verifySignUp.checkDuplicateContactOrEmail,
+        verifySignUp.checkRolesExisted
+        ],
+        controller.signup
     );
-    next();
-  });
 
-  app.post(
-    "/api/auth/signup",
-    [
-      verifySignUp.checkDuplicateContactOrEmail,
-      verifySignUp.checkRolesExisted
-    ],
-    controller.signup
-  );
-
-  app.post("/api/auth/signin", controller.signin);
+    // signin API
+    /* payload
+    {
+        "contact":"",
+        "password": ""
+    }
+    */
+    app.post("/api/auth/signin", controller.signin);
 };

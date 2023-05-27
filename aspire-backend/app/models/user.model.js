@@ -8,7 +8,7 @@ module.exports = (sequelize, Sequelize) => {
             unique: true,
             allowNull: false
         },
-        contact: {
+        contact: {                  // Primary Key
             type: Sequelize.STRING,
             primaryKey: true
         },
@@ -18,6 +18,7 @@ module.exports = (sequelize, Sequelize) => {
         password: {
             type: Sequelize.STRING
         }
+        // We can add more customer info like PAN, DOB details as required
     });
     return User;
 };
