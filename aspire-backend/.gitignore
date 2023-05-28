@@ -1,0 +1,15 @@
+logs
+*.log
+npm-debug.log*
+build/Release
+node_modules/
+.npm
+.eslintcache
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+.vscode-test
+package-lock.json
+config/db.config.js
