@@ -48,4 +48,18 @@ module.exports = async () => {
             });
         });
     });
+
+    await User.create({
+        name: "Prashant 3",
+        contact: "9919431223",
+        email: "prashant3@gmail.com",
+        address: "User Address 3",
+        password: bcrypt.hashSync("password", 8)
+    }).then(user => {
+        Role.findAll({ where: { name: "customer" }}).then(roles => {
+            user.setRoles(roles).then(() => {
+                console.log( "User with role customer registered successfully!" );
+            });
+        });
+    });
 }

@@ -19,6 +19,13 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING
         }
         // We can add more customer info like PAN, DOB details as required
-    });
+    }, 
+    {
+        defaultScope :{
+            attributes: {
+                // exclude the unwanted columns password on User.find call
+                exclude: ['createdAt', 'updatedAt', 'deletedAt', 'password'] 
+            }
+      }});
     return User;
 };
