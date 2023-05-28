@@ -1,5 +1,6 @@
 const { authJwt } = require("../middleware");
-const controller = require("../controllers/user.controller");
+const userController = require("../controllers/user.controller");
+const loanController = require("../controllers/loan.controller");
 
 module.exports = (app) => {
 
@@ -8,6 +9,12 @@ module.exports = (app) => {
   app.get(
     "/api/loan/allLoan", 
     [authJwt.verifyToken, authJwt.isAdmin],
-    controller.allAccess);
+    userController.allAccess);
+
+    app.post(
+        "/api/loan/approveLoan", 
+        [authJwt.verifyToken],
+        loanController.approveLoan, authJwt.isAdmin
+        );
 
 };
