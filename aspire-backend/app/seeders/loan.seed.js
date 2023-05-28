@@ -17,7 +17,8 @@ module.exports = async () => {
 
     await Loan.create({
         amount: 10000,
-        terms: 13
+        terms: 100,
+        loanStatus: 'APPROVED'
       }).then(loan => {
           User.findByPk('9919431221').then(user => {
               user.setLoans(loan).then( () => {

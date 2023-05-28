@@ -23,13 +23,20 @@ module.exports = function(app) {
     app.post(
         "/api/customer/addLoanRequest",
         [authJwt.verifyToken],
-        loanController.addLoanRequest
+        userController.addLoanRequest
     );
 
     //fetch loan details by customer
     app.get(
         "/api/customer/fetchLoan",
         [authJwt.verifyToken],
-        loanController.fetchLoan
+        userController.fetchLoan
+    );
+
+    //repayment
+    app.post(
+        "/api/customer/repayment",
+        [authJwt.verifyToken],
+        userController.repayment
     );
 };

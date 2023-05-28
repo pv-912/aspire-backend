@@ -6,7 +6,8 @@ module.exports = (sequelize, Sequelize) => {
         },
         terms: {                    // no of weekly recurring payments
             type: Sequelize.INTEGER,
-            allowNull: false   
+            allowNull: false,
+            defaultValue: 1         // to avoid exception while calculating prepayment amount if it is zero  
         },
         loanStatus: {
             type: Sequelize.ENUM('APPROVED', 'PENDING', 'REJECTED', 'PAID'),

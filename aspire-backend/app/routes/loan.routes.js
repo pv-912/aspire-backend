@@ -13,8 +13,8 @@ module.exports = (app) => {
 
     app.post(
         "/api/loan/approveLoan", 
-        [authJwt.verifyToken],
-        loanController.approveLoan, authJwt.isAdmin
+        [authJwt.verifyToken, authJwt.isAdmin],
+        loanController.approveLoan
         );
 
 };
