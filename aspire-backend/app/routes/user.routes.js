@@ -19,9 +19,16 @@ module.exports = function(app) {
         userController.adminBoard
     );
 
+    //add loan request by customer
+    app.post(
+        "/api/customer/addLoanRequest",
+        [authJwt.verifyToken],
+        loanController.addLoanRequest
+    );
+
     //fetch loan details by customer
     app.get(
-        "/api/customer/loan",
+        "/api/customer/fetchLoan",
         [authJwt.verifyToken],
         loanController.fetchLoan
     );

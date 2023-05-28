@@ -16,10 +16,21 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.INTEGER,
             defaultValue: 0
         },
+        termPaid: {               // total amount paid yet
+            type: Sequelize.INTEGER,
+            defaultValue: 0
+        },
         // Payment date should start after loan is approved.
         approvalDate: {            
             type: Sequelize.DATE
         }
-    });
+    }, 
+    {
+        defaultScope :{
+            attributes: {
+                // exclude the unwanted columns password on User.find call
+                exclude: ['createdAt', 'updatedAt', 'deletedAt'] 
+            }
+    }});
     return Loan;
 };
