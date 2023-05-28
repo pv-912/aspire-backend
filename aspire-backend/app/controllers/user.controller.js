@@ -84,12 +84,17 @@ exports.repayment = (req, res) => {
                 // Loan should be in approved status
                 // Payment Amount should be greater than minAmount
                 if(loan && loan.loanStatus == 'APPROVED' ) {
+                    
                     const termNo = loan.termPaid + 1;
-                    const amountLeft = loan.amout - loan.amountPaid;  // for last installment amount should equal to amountleft
+                    const amountLeft = loan.amount - loan.amountPaid;  // for last installment amount should equal to amountleft
+                    
                     if(termNo == loan.terms && amount != amountLeft) {
                         return res.status(400).send({ message: "For last installment amount should shoule be equal to left amount!!" });
+                    } else if(amount <= amountLeft) {
+                        return res.status(400).send({ message: "Amount paid is more than left loan amount!!" });
                     }
-                    if( (termNo == loan.terms && amount == amountLeft) || (amount >= minAmount)) {
+
+                    if( (termNo == loan.terms && amount == amountLeft) || (amount >= minAmount && amount <= amountLeft)) {
                         Transaction.create({
                             amount: amount,
                             termNo: termNo,
@@ -97,28 +102,32 @@ exports.repayment = (req, res) => {
                             loanId: loanId
                         }).then( trans => {
                             const amountPaid = loan.amountPaid + trans.amount;
-        
+                            const status = termNo == loan.terms ? 'PAID' : 'APPROVED';
                             loan.update(
                                 {  
                                     amountPaid: amountPaid,
-                                    termPaid: termNo
+                                    termPaid: termNo,
+                                    loanStatus: status
                                 },
                                 {where: {id: loanId}}
                             ).then( loan2 => {
                                 if(!loan2 ) {
                                     return res.status(400).send({ message: "Somethign went wrong -1!!" });
                                 }
+                                const msg = termNo == loan.terms ? "Payment Successful for last installment. Please fell free to contact us again for any loan requirement." :"Payment Successful for weekly installment term " + termNo + " !!";
                                 return res.send({  
                                     amount: amount,
-                                    message: "Payment Successful for weekly installment term " + termNo + " !!"
+                                    message: msg
                                 })
                             }).catch(err => res.status(400).send({message: "Something went wrong 0!!"}));
                         }).catch(err => res.status(400).send({message: "Something went wrong 1!!"}));
                     } else {
                         return res.status(406).send({message: "Amount to be paid is less than minimum installment !!"});
                     }
-                } else if(loan.loanStatus != 'APPROVED') {
-                    return res.status(406).send({ message: "Loan is not approved yet. Payment will be reverted to your bank in next 7 days!!" });
+                } else if(loan.loanStatus == 'PAID') {
+                    return res.status(406).send({ message: "Loan is already fully paid. Payment will be reverted to your bank in next 7 days!!" });
+                } else if(loan.loanStatus == 'REJECTED') {
+                    return res.status(406).send({ message: "Your loan request is rejected. Payment will be reverted to your bank in next 7 days!!" });
                 } else {
                     return res.status(406).send({ message: "Repayment amount should not be less than min repayment amount!!" });
                 }

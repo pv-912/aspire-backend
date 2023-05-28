@@ -11,6 +11,9 @@ exports.approveLoan = (req, res) => {
             loan.update({loanStatus: 'APPROVED'}).then( loan_2 => {
                 if(!loan_2) res.status(404).send({message: "Something went wrong!!"});
                 res.send({message: "Loan Approved"});
+                
+                // TO DO: Send Email notification
+
             }).catch(err => res.status(400).send({message: "Something went wrong"}));
         }).catch(err => res.status(400).send({message: "Something went wrong"}));
     } else if(!req.body) {
